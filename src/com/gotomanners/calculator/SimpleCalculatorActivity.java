@@ -148,7 +148,7 @@ private String performCalcOperation(View view, String operation) {
             Log.v(LOG_TAG, e.getMessage());
         }
 	}
-    return getString(R.string.error_error_string);
+    return getString(R.string.default_return_string);
 }
 
 
