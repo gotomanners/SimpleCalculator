@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simple Calculator</string>
+	<string name="calc_output_value">0</string>
+	<string name="calc_keypad_7">7</string>
+	<string name="calc_keypad_8">8</string>
+	<string name="calc_keypad_9">9</string>
+	<string name="calc_keypad_4">4</string>
+	<string name="calc_keypad_5">5</string>
+	<string name="calc_keypad_6">6</string>
+	<string name="calc_keypad_1">1</string>
+	<string name="calc_keypad_2">2</string>
+	<string name="calc_keypad_3">3</string>
+	<string name="calc_keypad_0">0</string>
+	<string name="calc_keypad_decimal_point">.</string>
+	<string name="calc_keypad_clear">c</string>
+	<string name="calc_keypad_operator_divide">/</string>
+	<string name="calc_keypad_operator_multiply">*</string>
+	<string name="calc_keypad_operator_subtract">-</string>
+	<string name="calc_keypad_operator_add">+</string>
+	<string name="calc_keypad_operator_equals">=</string>
+	<string name="calc_keypad_special_function">fn</string>
+    <string name="error_divide_b_zero">Cannot divide by zero</string>
+    <string name="error_error_string">ERROR</string>
+</resources>
