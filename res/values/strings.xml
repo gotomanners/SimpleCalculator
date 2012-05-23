@@ -20,7 +20,7 @@
 	<string name="calc_keypad_operator_add">+</string>
 	<string name="calc_keypad_operator_equals">=</string>
 	<string name="calc_keypad_special_function">fn</string>
-    <string name="error_divide_b_zero">Cannot divide by zero</string>
+    <string name="error_divide_by_zero">Cannot divide by zero</string>
     <string name="error_error_string">ERROR</string>
 	<string name="default_return_string">0</string>
 </resources>
