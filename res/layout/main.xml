@@ -13,7 +13,7 @@
 			android:textSize="40dp"
 			android:textIsSelectable="true"
 			android:gravity="right"
-			android:inputType="numberDecimal"
+			android:inputType="textNoSuggestions"
 			android:text="@string/calc_output_value"
 			/>
 

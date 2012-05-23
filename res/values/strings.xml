@@ -13,7 +13,7 @@
 	<string name="calc_keypad_3">3</string>
 	<string name="calc_keypad_0">0</string>
 	<string name="calc_keypad_decimal_point">.</string>
-	<string name="calc_keypad_clear">c</string>
+	<string name="calc_keypad_clear">clr</string>
 	<string name="calc_keypad_operator_divide">/</string>
 	<string name="calc_keypad_operator_multiply">*</string>
 	<string name="calc_keypad_operator_subtract">-</string>
