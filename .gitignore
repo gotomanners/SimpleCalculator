@@ -1,4 +1,4 @@
-# IDEA Ignores
+﻿# IDEA Ignores
 *.iml
 *.ipr
 *.iws
@@ -10,3 +10,5 @@ out/
 bin/
 target
 gen/
+*proguard*
+*.apk

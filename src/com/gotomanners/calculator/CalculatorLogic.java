@@ -1,8 +1,6 @@
 package com.gotomanners.calculator;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -13,22 +11,27 @@ import java.util.ArrayList;
  * Time: 2:15 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Calculator {
+public class CalculatorLogic {
 
-    private static final String LOG_TAG = "SimpleCalculator";
+    protected static final String LOG_TAG = "SimpleCalculator";
     private static Context context = null;
-    double total;
-    ArrayList<String> numbersEntered;
-    ArrayList<String> operationsEntered;
 
-    public Calculator() {
+    private String lastNumber;
+    private boolean looseOperatorPresent;
+    private boolean shouldResetAfterResult;
+
+    double total;
+    private ArrayList<String> numbersEntered;
+    private ArrayList<String> operationsEntered;
+
+    public CalculatorLogic() {
         this.total = 0.0;
         numbersEntered = new ArrayList<String>();
         operationsEntered = new ArrayList<String>();
     }
 
     public static void setContext(Context context) {
-        Calculator.context = context;
+        CalculatorLogic.context = context;
     }
 
     protected double solve() throws Exception {
@@ -39,7 +42,7 @@ public class Calculator {
                     String operation = "";
                     for (int i=0; i<numbersEntered.size(); i++) {
                         number = numbersEntered.get(i);
-                        if(i ==0){
+                        if(i == 0){
                             setTotal(stringToDouble(number));
                         } else {
                             operation = operationsEntered.get(i-1);
@@ -55,7 +58,8 @@ public class Calculator {
                             if(operation.equals("/")) {
                                 if(number.equals("0")) {
                                     clearAll();
-                                    throw new CannotDivideByZeroException(context.getString(R.string.error_divide_by_zero));
+                                    throw new CannotDivideByZeroException(
+                                            context.getString(R.string.error_divide_by_zero));
 //                                    return 0.0;
                                 }
                                 this.divide(number);
@@ -101,6 +105,9 @@ public class Calculator {
 
     protected void clearAll() {
         setTotal(0.0);
+        lastNumber = "";
+        shouldResetAfterResult = true;
+        looseOperatorPresent = false;
         numbersEntered.clear();
         operationsEntered.clear();
     }
@@ -111,6 +118,46 @@ public class Calculator {
 
     private String doubleToString(double number) {
         return String.valueOf(number);
+    }
+
+    public String getLastNumber() {
+        return lastNumber;
+    }
+
+    public void setLastNumber(String lastNumber) {
+        this.lastNumber = lastNumber;
+    }
+
+    public boolean isLooseOperatorPresent() {
+        return looseOperatorPresent;
+    }
+
+    public void setLooseOperatorPresent(boolean looseOperatorPresent) {
+        this.looseOperatorPresent = looseOperatorPresent;
+    }
+
+    public boolean shouldResetAfterResult() {
+        return shouldResetAfterResult;
+    }
+
+    public void setShouldResetAfterResult(boolean shouldResetAfterResult) {
+        this.shouldResetAfterResult = shouldResetAfterResult;
+    }
+
+    public ArrayList<String> getNumbersEntered() {
+        return numbersEntered;
+    }
+
+    public void setNumbersEntered(ArrayList<String> numbersEntered) {
+        this.numbersEntered = numbersEntered;
+    }
+
+    public ArrayList<String> getOperationsEntered() {
+        return operationsEntered;
+    }
+
+    public void setOperationsEntered(ArrayList<String> operationsEntered) {
+        this.operationsEntered = operationsEntered;
     }
 }
 

@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SimpleCalculatorActivity extends Activity implements View.OnClickListener {
 
-    private static final String LOG_TAG = "SimpleCalculator";
-    private EditText calcOutput;
+    protected static final String LOG_TAG = "SimpleCalculator";
+    private TextView calcOutput;
     private Button button0;
     private Button button1;
     private Button button2;
@@ -32,12 +32,11 @@ public class SimpleCalculatorActivity extends Activity implements View.OnClickLi
 
     private Button button_operator_equals;
 
-    private String lastNumber;
-    private boolean looseOperatorPresent;
-    private boolean shouldResetAfterResult;
+    private CalculatorLogic calculatorLogic;
 
-    private Calculator calculator;
-
+    public CalculatorLogic getCalculatorLogic() {
+        return calculatorLogic;
+    }
 
     /**
      * Called when the activity is first created.
@@ -47,7 +46,7 @@ public class SimpleCalculatorActivity extends Activity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        calcOutput = (EditText) this.findViewById(R.id.calcOutput);
+        calcOutput = (TextView) this.findViewById(R.id.calcOutput);
 
         button0 = (Button) findViewById(R.id.button0);
         button1 = (Button) findViewById(R.id.button1);
@@ -87,16 +86,16 @@ public class SimpleCalculatorActivity extends Activity implements View.OnClickLi
         button_operator_add.setOnClickListener(this);
         button_operator_equals.setOnClickListener(this);
 
-        calculator = new Calculator();
-        Calculator.setContext(this);
-        lastNumber = "";
+        calculatorLogic = new CalculatorLogic();
+        CalculatorLogic.setContext(this);
+        calculatorLogic.setLastNumber("");
 
     }
 
     private void appendNumberPressedToCalcOutput(View view) {
-        if(shouldResetAfterResult) {
+        if(calculatorLogic.shouldResetAfterResult()) {
             resetCalculator();
-            shouldResetAfterResult = false;
+            calculatorLogic.setShouldResetAfterResult(false);
         }
         String numPressed = ((Button) view).getText().toString();
         if (calcOutput.getText().toString().equals("0")) {
@@ -105,52 +104,51 @@ public class SimpleCalculatorActivity extends Activity implements View.OnClickLi
             calcOutput.append(numPressed);
         }
 
-        lastNumber += numPressed;
-        looseOperatorPresent = false;
+        calculatorLogic.setLastNumber(calculatorLogic.getLastNumber()+numPressed);
+        calculatorLogic.setLooseOperatorPresent(false);
 
-        Log.i(LOG_TAG, "appended= "+lastNumber);
+        Log.i(LOG_TAG, "appended= "+calculatorLogic.getLastNumber());
     }
 
     private void appendOperationPressedToCalcOutput(View view) {
-        if(!looseOperatorPresent) {
+        if(!calculatorLogic.isLooseOperatorPresent()) {
             Log.i(LOG_TAG, "No immediate existing operator");
             String operation = ((Button) view).getText().toString();
             calcOutput.append(operation);
             recordOperationPressed(view);
-            looseOperatorPresent = true;
-            shouldResetAfterResult = false;
+            calculatorLogic.setLooseOperatorPresent(true);
+            calculatorLogic.setShouldResetAfterResult(false);
 
             Log.i(LOG_TAG, "Appending "+((Button) view).getText());
         }
     }
 
-    private void resetCalculator() {
+    protected void resetCalculator() {
         calcOutput.setText("0");
-        lastNumber = "";
-        calculator.clearAll();
+        calculatorLogic.clearAll();
 
         Log.i(LOG_TAG, "cleared output");
     }
 
     private void recordNumberEntered() {
-        calculator.numbersEntered.add(this.lastNumber);
-        Log.i(LOG_TAG, "last number recorded= "+lastNumber);
+        calculatorLogic.getNumbersEntered().add(calculatorLogic.getLastNumber());
+        Log.i(LOG_TAG, "last number recorded= "+calculatorLogic.getLastNumber());
 
-        lastNumber = "";
-        looseOperatorPresent = false;
+        calculatorLogic.setLastNumber("");
+        calculatorLogic.setLooseOperatorPresent(false);
     }
 
     private void recordOperationPressed(View view) {
         String op = ((Button) view).getText().toString();
 
         recordNumberEntered();
-        calculator.operationsEntered.add(op);
+        calculatorLogic.getOperationsEntered().add(op);
 
         Log.i(LOG_TAG, "last operation recorded= " + op);
     }
 
     private void displayResult() {
-        String result = removeUnnecessaryDecimalZero(calculator.getTotal());
+        String result = removeUnnecessaryDecimalZero(calculatorLogic.getTotal());
         calcOutput.setText(result);
 
         Log.i(LOG_TAG, "Displaying Result " + result);
@@ -162,13 +160,13 @@ public class SimpleCalculatorActivity extends Activity implements View.OnClickLi
         try {
             recordNumberEntered();
 
-            double result = calculator.solve();
-            this.lastNumber =removeUnnecessaryDecimalZero(result);
+            double result = calculatorLogic.solve();
+            calculatorLogic.setLastNumber(removeUnnecessaryDecimalZero(result));
 
             displayResult();
 
-            calculator.clearAll();
-            shouldResetAfterResult = true;
+            calculatorLogic.clearAll();
+            calculatorLogic.setShouldResetAfterResult(true);
 
         } catch (CannotDivideByZeroException cdz) {
             Toast.makeText(this, getString(R.string.error_divide_by_zero), Toast.LENGTH_LONG).show();
@@ -179,7 +177,7 @@ public class SimpleCalculatorActivity extends Activity implements View.OnClickLi
             Log.e(LOG_TAG, e.getMessage());
             resetCalculator();
         }
-        looseOperatorPresent = false;
+        calculatorLogic.setLooseOperatorPresent(false);
     }
 
     private String removeUnnecessaryDecimalZero(double number) {
